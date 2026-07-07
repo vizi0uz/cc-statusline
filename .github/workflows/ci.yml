@@ -39,5 +39,21 @@ jobs:
           export HOME="$RUNNER_TEMP/fakehome"; export USERPROFILE="$HOME"
           mkdir -p "$HOME/.claude"
           printf '%s' '{"theme":"dark","env":{"FOO":"bar"}}' > "$HOME/.claude/settings.json"
-          node bin/cc-statusline.cjs setup
+          node bin/cc-statusline.cjs setup < /dev/null
           node test/assert-merge.cjs
+
+      - name: Identity flag toggle (--show-identity / --no-show-identity)
+        run: |
+          export HOME="$RUNNER_TEMP/fakehome"; export USERPROFILE="$HOME"
+          node bin/cc-statusline.cjs setup --show-identity < /dev/null
+          node test/assert-identity.cjs
+          node bin/cc-statusline.cjs setup --no-show-identity < /dev/null
+          node test/assert-identity-cleared.cjs
+          node bin/cc-statusline.cjs setup --show-identity < /dev/null
+          node test/assert-identity.cjs
+
+      - name: Uninstall (--yes, non-interactive)
+        run: |
+          export HOME="$RUNNER_TEMP/fakehome"; export USERPROFILE="$HOME"
+          node bin/cc-statusline.cjs uninstall --yes < /dev/null
+          node test/assert-uninstall.cjs

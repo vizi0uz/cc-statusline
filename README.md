@@ -27,6 +27,8 @@ Running the installer does two things, and nothing else:
 
 Only the `statusLine` key is touched — every other top-level key and nested object in your existing `settings.json` is preserved as-is. Before writing, the installer copies your current `settings.json` to `settings.json.bak` in the same directory, so you always have a one-step way back.
 
+When run from a real terminal, setup also asks one question — whether to show Plan/Email/LAN/WAN IP in the statusline (see [Identity flag and IP refresh](#identity-flag-and-ip-refresh) below). Use arrow keys or press `1`/`2` to answer, or skip the prompt entirely with `--show-identity` / `--no-show-identity`.
+
 ## How it works
 
 The launcher (`bin/cc-statusline.cjs`) is a single self-contained file — it uses only Node built-ins, so copying just that file plus `scripts/` into `~/.claude/cc-statusline/` produces a fully working runtime with no dependency on the npm package or `node_modules` still being around. It runs in two modes:
@@ -46,15 +48,36 @@ A few deliberate details carried over from hard-won experience running this on r
 
 ## Dependencies
 
-- **Node.js ≥ 14** to run the launcher itself. `setup` pins `statusLine.command` to the exact `node` binary that ran the installer (not the bare word `node`), since version managers like nvm/conda/volta only put `node` on `PATH` behind shell activation, which Claude Code's non-interactive spawn doesn't go through. If you later switch Node runtimes (a different `nvm use`, a renamed/removed conda env, etc.), rerun `npx @viziouz/cc-statusline@latest setup` to repoint it.
+- **Node.js ≥ 14.14** to run the launcher itself (the floor needed for `fs.rmSync`, used by `uninstall`). `setup` pins `statusLine.command` to the exact `node` binary that ran the installer (not the bare word `node`), since version managers like nvm/conda/volta only put `node` on `PATH` behind shell activation, which Claude Code's non-interactive spawn doesn't go through. If you later switch Node runtimes (a different `nvm use`, a renamed/removed conda env, etc.), rerun `npx @viziouz/cc-statusline@latest setup` to repoint it.
 - **macOS / Linux:** `bash`, [`jq`](https://jqlang.github.io/jq/), and `curl` for the `.sh` script.
 - **Windows:** PowerShell 7 (`pwsh`) is recommended for correct color rendering; Windows PowerShell 5.1 (`powershell.exe`) works as a fallback but renders ANSI escapes as literal text.
 
 ## Identity flag and IP refresh
 
-The underlying status line scripts support an optional "identity" feature that displays your public IP, refreshed via `api.ipify.org`. That feature, its configuration, and its privacy implications are documented in the upstream [`claude-statusline`](https://github.com/vizi0uz/claude-statusline) repo — `cc-statusline` just installs and runs whatever version of the scripts it fetched, so refer there for the authoritative configuration reference. It's off by default, and CI for this package always runs with it disabled to keep test runs hermetic.
+The underlying status line scripts support an optional "identity" feature that displays your account Plan/Email plus LAN/public IP, refreshed periodically. That feature, its configuration, and its privacy implications are documented in the upstream [`claude-statusline`](https://github.com/vizi0uz/claude-statusline) repo — `cc-statusline` just installs and runs whatever version of the scripts it fetched, so refer there for the authoritative configuration reference. It's off by default, and CI for this package always runs with it disabled to keep test runs hermetic.
+
+`setup` surfaces this as a one-question prompt (arrow keys or `1`/`2` to answer) on a real terminal, or you can skip the prompt entirely:
+
+```
+npx @viziouz/cc-statusline@latest setup --show-identity     # turn it on
+npx @viziouz/cc-statusline@latest setup --no-show-identity   # turn it off (also clears a prior "Yes")
+```
+
+An explicit flag always wins over the prompt. With neither flag, a non-interactive run (CI, scripted installs) silently keeps it off — the same privacy-safe default as before this prompt existed.
 
 ## Uninstall
+
+```
+npx @viziouz/cc-statusline@latest uninstall
+```
+
+Asks for confirmation (arrow keys or `1`/`2`), then removes the `statusLine` block it added — only if it still points at this install's own launcher, so a `statusLine` you've since repointed elsewhere is left alone — and deletes `~/.claude/cc-statusline`. `env.CLAUDE_STATUSLINE_SHOW_IDENTITY` is left untouched either way, since it may be something you set independently of this tool. For scripted/non-interactive removal, pass `--yes` (uninstalling without a TTY and without `--yes` is refused rather than silently skipped or silently applied):
+
+```
+npx @viziouz/cc-statusline@latest uninstall --yes
+```
+
+If you'd rather do it by hand instead:
 
 1. Restore your previous settings from the backup:
    ```
