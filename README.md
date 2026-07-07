@@ -3,7 +3,7 @@
 A portable, cross-platform status line for [Claude Code](https://claude.com/claude-code) — installed with a single command.
 
 ```
-npx cc-statusline@latest
+npx @viziouz/cc-statusline@latest
 ```
 
 That's it. Restart Claude Code and you'll have a live status line showing model, effort level, context usage, and rate-limit info, on macOS, Linux, and Windows alike.
@@ -31,7 +31,7 @@ Only the `statusLine` key is touched — every other top-level key and nested ob
 
 The launcher (`bin/cc-statusline.cjs`) is a single self-contained file — it uses only Node built-ins, so copying just that file plus `scripts/` into `~/.claude/cc-statusline/` produces a fully working runtime with no dependency on the npm package or `node_modules` still being around. It runs in two modes:
 
-- **setup mode** (`cc-statusline setup`, or a bare `npx cc-statusline` from a terminal) — installs the runtime and merges `settings.json` as described above.
+- **setup mode** (`cc-statusline setup`, or a bare `npx @viziouz/cc-statusline` from a terminal) — installs the runtime and merges `settings.json` as described above.
 - **render mode** (`cc-statusline render`, or a bare invocation when stdin is piped) — this is what Claude Code actually invokes on every status line refresh. It reads the JSON Claude Code pipes in on stdin, detects `process.platform`, and spawns the matching script with `stdio: 'inherit'` so the JSON flows straight through and the rendered ANSI output flows straight back out.
 
 A few deliberate details carried over from hard-won experience running this on real machines:
