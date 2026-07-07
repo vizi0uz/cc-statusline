@@ -1,0 +1,4 @@
+node_modules/
+scripts/statusline.sh
+scripts/statusline.ps1
+*.tgz

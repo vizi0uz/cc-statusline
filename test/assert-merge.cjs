@@ -1,0 +1,10 @@
+'use strict';
+const fs = require('fs'), os = require('os'), path = require('path');
+const p = path.join(os.homedir(), '.claude', 'settings.json');
+const s = JSON.parse(fs.readFileSync(p, 'utf8'));
+if (!s.statusLine || !s.statusLine.command) throw new Error('statusLine not merged');
+if (s.statusLine.command.indexOf('\\') !== -1) throw new Error('command has backslashes (should be forward slashes)');
+if (s.theme !== 'dark') throw new Error('unrelated top-level key lost');
+if (!s.env || s.env.FOO !== 'bar') throw new Error('nested unrelated key lost');
+if (!fs.existsSync(p + '.bak')) throw new Error('no settings.json.bak backup');
+console.log('merge ok:', s.statusLine.command);
