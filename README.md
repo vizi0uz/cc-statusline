@@ -46,7 +46,7 @@ A few deliberate details carried over from hard-won experience running this on r
 
 ## Dependencies
 
-- **Node.js ≥ 14** to run the launcher itself.
+- **Node.js ≥ 14** to run the launcher itself. `setup` pins `statusLine.command` to the exact `node` binary that ran the installer (not the bare word `node`), since version managers like nvm/conda/volta only put `node` on `PATH` behind shell activation, which Claude Code's non-interactive spawn doesn't go through. If you later switch Node runtimes (a different `nvm use`, a renamed/removed conda env, etc.), rerun `npx @viziouz/cc-statusline@latest setup` to repoint it.
 - **macOS / Linux:** `bash`, [`jq`](https://jqlang.github.io/jq/), and `curl` for the `.sh` script.
 - **Windows:** PowerShell 7 (`pwsh`) is recommended for correct color rendering; Windows PowerShell 5.1 (`powershell.exe`) works as a fallback but renders ANSI escapes as literal text.
 

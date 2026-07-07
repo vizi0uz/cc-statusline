@@ -48,8 +48,16 @@ function resolveScript() {
   return candidates[0];
 }
 
+// Bare "node" only resolves in shells that source the same PATH setup() saw
+// (nvm/conda/volta all gate node behind shell activation). Claude Code spawns
+// statusLine.command directly, without that activation, so the literal word
+// "node" can go unresolved even though this very process is running node.
+// Pin to the exact binary that's running right now instead, quoted so paths
+// with spaces (very common on Windows, e.g. "Program Files") survive the
+// POSIX-style shell Claude Code uses to run the command.
 function buildStatusLineCommand(launcherPath) {
-  return 'node ' + toPosixPath(launcherPath) + ' render';
+  const nodePath = toPosixPath(process.execPath);
+  return '"' + nodePath + '" "' + toPosixPath(launcherPath) + '" render';
 }
 
 // ---- render mode ----
