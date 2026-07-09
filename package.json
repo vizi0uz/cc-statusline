@@ -1,13 +1,18 @@
 {
   "name": "@viziouz/cc-statusline",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "One-command installer for a portable, cross-platform Claude Code status line.",
   "type": "commonjs",
-  "bin": { "cc-statusline": "bin/cc-statusline.cjs" },
+  "bin": {
+    "cc-statusline": "bin/cc-statusline.cjs"
+  },
   "main": "index.cjs",
   "module": "index.mjs",
   "exports": {
-    ".": { "require": "./index.cjs", "import": "./index.mjs" },
+    ".": {
+      "require": "./index.cjs",
+      "import": "./index.mjs"
+    },
     "./package.json": "./package.json"
   },
   "files": [
@@ -26,9 +31,20 @@
     "postinstall": "node scripts/postinstall.cjs",
     "test": "node scripts/fetch-source.js && node bin/cc-statusline.cjs render < test/sample.json"
   },
-  "engines": { "node": ">=14.14" },
-  "keywords": ["claude", "claude-code", "statusline", "cli", "npx"],
+  "engines": {
+    "node": ">=14.14"
+  },
+  "keywords": [
+    "claude",
+    "claude-code",
+    "statusline",
+    "cli",
+    "npx"
+  ],
   "license": "MIT",
   "author": "vizi0uz <xwolf.live@gmail.com>",
-  "repository": { "type": "git", "url": "git+https://github.com/vizi0uz/cc-statusline.git" }
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vizi0uz/cc-statusline.git"
+  }
 }
