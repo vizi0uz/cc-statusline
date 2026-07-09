@@ -1,6 +1,6 @@
 {
   "name": "@viziouz/cc-statusline",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "One-command installer for a portable, cross-platform Claude Code status line.",
   "type": "commonjs",
   "bin": { "cc-statusline": "bin/cc-statusline.cjs" },
