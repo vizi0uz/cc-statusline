@@ -1,5 +1,7 @@
 # cc-statusline
 
+[![scripts from · claude-statusline](https://img.shields.io/badge/scripts%20from-claude--statusline-blue)](https://github.com/vizi0uz/claude-statusline)
+
 A portable, cross-platform status line for [Claude Code](https://claude.com/claude-code) — installed with a single command.
 
 ```

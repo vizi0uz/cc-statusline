@@ -1,7 +1,7 @@
 {
   "name": "@viziouz/cc-statusline",
   "version": "0.2.3",
-  "description": "One-command installer for a portable, cross-platform Claude Code status line.",
+  "description": "Installer for the claude-statusline status line for Claude Code — model, effort, context, rate limits, cache efficiency.",
   "type": "commonjs",
   "bin": {
     "cc-statusline": "bin/cc-statusline.cjs"
@@ -37,6 +37,7 @@
   "keywords": [
     "claude",
     "claude-code",
+    "claude-statusline",
     "statusline",
     "cli",
     "npx"
