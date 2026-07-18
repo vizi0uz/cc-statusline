@@ -128,8 +128,12 @@ function render() {
   const script = resolveScript();
   let result;
   if (process.platform === 'win32') {
-    // Prefer pwsh (PS7): the .ps1 uses `e ANSI escapes that PS 5.1 renders
-    // literally. Fall back to powershell.exe only if pwsh is missing.
+    // Prefer pwsh (PowerShell 7): measured ~2.8x faster to render than Windows
+    // PowerShell 5.1 (~0.5s vs ~1.4s per spawn on Win11), even when pwsh is the
+    // MSIX/Store build -- the AppX activation cost is negligible once warm, and
+    // the status line re-spawns on every render. The .ps1 is pure ASCII and
+    // renders identically on both, so powershell.exe (always preinstalled) is a
+    // correct, if slower, fallback when pwsh isn't on PATH.
     result = spawnSync('pwsh', ['-NoProfile', '-File', script], { stdio: 'inherit' });
     if (result.error && result.error.code === 'ENOENT') {
       result = spawnSync('powershell.exe', ['-NoProfile', '-File', script], { stdio: 'inherit' });

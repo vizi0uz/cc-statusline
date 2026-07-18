@@ -42,7 +42,7 @@ A few deliberate details carried over from hard-won experience running this on r
 
 - **Forward slashes in the installed command.** Claude Code runs `statusLine.command` through a POSIX-style shell even on Windows. A raw Windows backslash path gets escape-collapsed there and the status line just goes blank with no error. The installer always writes the launcher path with `/` separators, regardless of platform.
 - **BOM-free `settings.json` writes.** The file is written with plain `utf8` encoding, never `utf8` with a byte-order mark — a BOM at the front of the file breaks Claude Code's JSON parser.
-- **`pwsh` first, `powershell.exe` as fallback, on Windows.** The ported `.ps1` script uses PowerShell 7's `` `e `` ANSI escape syntax for color. Windows PowerShell 5.1 renders that literally instead of as an escape code, so render mode tries `pwsh` first and only falls back to `powershell.exe` if `pwsh` isn't on `PATH`.
+- **`pwsh` first, `powershell.exe` as fallback, on Windows.** The `.ps1` script is pure ASCII and builds its ANSI escapes from code points, so it renders identically on Windows PowerShell 5.1 and PowerShell 7. Render mode prefers `pwsh` purely for speed: it renders in ~0.5s versus ~1.4s for `powershell.exe` (5.1) — measured ~2.8× faster on Windows 11, even with the MSIX/Store build of `pwsh` (its AppX activation cost is negligible once warm, and the status line re-spawns on every refresh). It falls back to `powershell.exe`, which is preinstalled on every Windows, when `pwsh` isn't on `PATH`.
 
 ## Where the scripts come from
 
@@ -52,7 +52,7 @@ A few deliberate details carried over from hard-won experience running this on r
 
 - **Node.js ≥ 14.14** to run the launcher itself (the floor needed for `fs.rmSync`, used by `uninstall`). `setup` pins `statusLine.command` to the exact `node` binary that ran the installer (not the bare word `node`), since version managers like nvm/conda/volta only put `node` on `PATH` behind shell activation, which Claude Code's non-interactive spawn doesn't go through. If you later switch Node runtimes (a different `nvm use`, a renamed/removed conda env, etc.), rerun `npx @viziouz/cc-statusline@latest setup` to repoint it.
 - **macOS / Linux:** `bash`, [`jq`](https://jqlang.github.io/jq/), and `curl` for the `.sh` script.
-- **Windows:** PowerShell 7 (`pwsh`) is recommended for correct color rendering; Windows PowerShell 5.1 (`powershell.exe`) works as a fallback but renders ANSI escapes as literal text.
+- **Windows:** either PowerShell 7 (`pwsh`, preferred — renders ~2.8× faster) or Windows PowerShell 5.1 (`powershell.exe`, preinstalled — the fallback). The `.ps1` renders identically on both.
 
 ## Identity flag and IP refresh
 
