@@ -1,6 +1,6 @@
 {
   "name": "@viziouz/cc-statusline",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "Installer for the claude-statusline status line for Claude Code — model, effort, context, rate limits, cache efficiency.",
   "type": "commonjs",
   "bin": {
